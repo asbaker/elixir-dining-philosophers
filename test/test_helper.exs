@@ -1,0 +1,2 @@
+ElixirDiningPhilosophers.start
+ExUnit.start
