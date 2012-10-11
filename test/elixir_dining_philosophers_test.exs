@@ -88,12 +88,12 @@ defmodule ElixirDiningPhilosophersTest do
     assert Fork.is_fork_taken(fork1)
 
     current_process = Process.self
-    Process.spawn fn -> 
+    Process.spawn fn ->
       current_process <- Fork.return_fork(fork1) == false && Fork.take_fork(fork1) == false
     end
 
     receive do
-      val -> 
+      val ->
         assert val == true
       after 1000 ->
         raise "Spawned assertion not responding"

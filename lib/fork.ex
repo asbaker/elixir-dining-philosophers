@@ -38,8 +38,8 @@ defmodule Fork do
 
     receive do
       {:query, taken, fork} ->
-        taken 
-      after 1000 -> 
+        taken
+      after 1000 ->
         raise "Fork not responding"
     end
   end
@@ -49,10 +49,10 @@ defmodule Fork do
 
     receive do
       {:kill, :ok, fork} ->
-        true 
+        true
       _ ->
         raise "Fork wasn't killed"
-      after 1000 -> 
+      after 1000 ->
         raise "Fork not responding"
     end
   end
@@ -62,10 +62,10 @@ defmodule Fork do
 
     receive do
       {:take, :ok, fork} ->
-        true 
+        true
       _ ->
         false
-      after 1000 -> 
+      after 1000 ->
         raise "Fork not responding"
     end
   end
@@ -75,10 +75,10 @@ defmodule Fork do
 
     receive do
       {:return, :ok, fork} ->
-        true 
+        true
       _ ->
-        false 
-      after 1000 -> 
+        false
+      after 1000 ->
         raise "Fork not responding"
     end
   end
