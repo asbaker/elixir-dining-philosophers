@@ -1,2 +1,2 @@
-ElixirDiningPhilosophers.start
+# ElixirDiningPhilosophers.start
 ExUnit.start

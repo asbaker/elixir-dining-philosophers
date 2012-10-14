@@ -18,3 +18,26 @@ defmodule ElixirDiningPhilosophers.Mixfile do
     []
   end
 end
+
+defmodule Mix.Tasks.Start do
+  defmodule Deadlock do
+    use Mix.Task
+
+    @shortdoc "start up the dead locking scenario"
+
+    def run(_) do
+      Mix.Task.run("run", ["ElixirDiningPhilosophers.dead_locking_scenario()"])
+    end
+  end
+
+  defmodule Nonlocking do
+    use Mix.Task
+
+    @shortdoc "start up the non locking scenario"
+
+    def run(_) do
+      Mix.Task.run("run", ["ElixirDiningPhilosophers.non_locking"])
+    end
+  end
+end
+

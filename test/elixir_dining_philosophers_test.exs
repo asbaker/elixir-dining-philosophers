@@ -53,7 +53,9 @@ defmodule ElixirDiningPhilosophersTest do
     fork2 = Fork.create_fork
 
     assert !Fork.is_fork_taken(fork1)
+    assert Fork.is_fork_available(fork1)
     assert !Fork.is_fork_taken(fork2)
+    assert Fork.is_fork_available(fork2)
 
     Fork.take_fork(fork1)
 
@@ -83,11 +85,27 @@ defmodule ElixirDiningPhilosophersTest do
 
   test "forks can not be stolen" do
     fork1 = Fork.create_fork
+    current_process = Process.self
 
     Fork.take_fork(fork1)
     assert Fork.is_fork_taken(fork1)
+    assert Fork.is_fork_mine(fork1)
 
-    current_process = Process.self
+
+
+    Process.spawn fn ->
+      current_process <- Fork.is_fork_mine(fork1) == false
+    end
+
+    receive do
+      val ->
+        assert val == true
+      after 1000 ->
+        raise "Spawned assertion not responding"
+    end
+
+
+
     Process.spawn fn ->
       current_process <- Fork.return_fork(fork1) == false && Fork.take_fork(fork1) == false
     end

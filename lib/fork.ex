@@ -6,80 +6,80 @@ defmodule Fork do
   def start_fork(taken, owner) do
     receive do
       {:query, pid} ->
-        pid <- {:query, taken, Process.self}
+        send_reply(pid, :query, taken)
+        start_fork(taken, owner)
+      {:mine, pid} ->
+        send_reply(pid, :mine, pid == owner)
         start_fork(taken, owner)
       {:take, pid} ->
         if !taken do
-          pid <- {:take, :ok, Process.self}
+          send_reply(pid, :take, :ok)
           start_fork(true, pid)
         else
-          pid <- {:take, :fail, Process.self}
+          send_reply(pid, :take, :fail)
           start_fork(taken, owner)
         end
       {:return, pid} ->
         if taken && pid == owner do
-          pid <- {:return, :ok, Process.self}
+          send_reply(pid, :return, :ok)
           start_fork(false, nil)
         else
-          pid <- {:return, :fail, Process.self}
+          send_reply(pid, :return, :fail)
           start_fork(taken, owner)
         end
       {:kill, pid} ->
-        pid <- {:kill, :ok, Process.self}
+        send_reply(pid, :kill, :ok)
     end
   end
 
-  def send_to_fork(fork, msg) do
-    fork <- {msg, Process.self}
-  end
 
+  # Client helper methods
   def is_fork_taken(fork) do
     send_to_fork(fork, :query)
+    receive_response(:query, fork)
+  end
 
-    receive do
-      {:query, taken, fork} ->
-        taken
-      after 1000 ->
-        raise "Fork not responding"
-    end
+  def is_fork_available(fork) do
+    not is_fork_taken(fork)
+  end
+
+  def is_fork_mine(fork) do
+    send_to_fork(fork, :mine)
+    receive_response(:mine, fork)
   end
 
   def kill_fork(fork) do
     send_to_fork(fork, :kill)
-
-    receive do
-      {:kill, :ok, fork} ->
-        true
-      _ ->
-        raise "Fork wasn't killed"
-      after 1000 ->
-        raise "Fork not responding"
-    end
+    receive_response(:kill, fork) == :ok
   end
 
   def take_fork(fork) do
     send_to_fork(fork, :take)
-
-    receive do
-      {:take, :ok, fork} ->
-        true
-      _ ->
-        false
-      after 1000 ->
-        raise "Fork not responding"
-    end
+    receive_response(:take, fork) == :ok
   end
 
   def return_fork(fork) do
     send_to_fork(fork, :return)
+    receive_response(:return, fork) == :ok
+  end
 
+
+  # Private
+  defp send_reply(who, action, result) do
+    who <- {action, result, Process.self}
+  end
+
+  defp send_to_fork(fork, msg) do
+    fork <- {msg, Process.self}
+  end
+
+  defp receive_response(action, from) do
     receive do
-      {:return, :ok, fork} ->
-        true
-      _ ->
-        false
+      {action, result, from} ->
+        result
       after 1000 ->
         raise "Fork not responding"
     end
   end
+
 end
