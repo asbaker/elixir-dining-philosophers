@@ -2,8 +2,9 @@ defmodule Philosopher do
   defrecord PhilosopherRecord, name: nil, left_fork: nil, right_fork: nil, status: :waiting, times_eaten: 0
 
   defmodule DeadLocking do
-    def start_philosopher(philosopher) do
-      spawn fn -> run_loop(philosopher) end
+    def start_new_philosopher(name, left_fork, right_fork) do
+      p = PhilosopherRecord.new(name: name, left_fork: left_fork, right_fork: right_fork)
+      spawn fn -> run_loop(p) end
     end
 
     def run_loop(philosopher) do
@@ -50,8 +51,9 @@ defmodule Philosopher do
 
 
   defmodule NonLocking do
-    def start_philosopher(philosopher) do
-      spawn fn -> run_loop(philosopher) end
+    def start_new_philosopher(name, left_fork, right_fork) do
+      p = PhilosopherRecord.new(name: name, left_fork: left_fork, right_fork: right_fork)
+      spawn fn -> run_loop(p) end
     end
 
     def run_loop(philosopher) do
@@ -79,6 +81,7 @@ defmodule Philosopher do
 
           Fork.return_fork(second_fork)
           Fork.return_fork(first_fork)
+          Philosopher.think(philosopher)
         else
           Fork.return_fork(first_fork)
           Philosopher.think(philosopher)
