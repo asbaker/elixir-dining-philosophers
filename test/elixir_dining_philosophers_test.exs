@@ -57,14 +57,20 @@ defmodule ElixirDiningPhilosophersTest do
     assert !Fork.is_fork_taken(fork2)
     assert Fork.is_fork_available(fork2)
 
-    Fork.take_fork(fork1)
+    assert Fork.take_fork(fork1)
 
     assert Fork.is_fork_taken(fork1)
     assert !Fork.is_fork_taken(fork2)
 
-    Fork.take_fork(fork2)
+    assert Fork.take_fork(fork2)
     assert Fork.is_fork_taken(fork1)
     assert Fork.is_fork_taken(fork2)
+  end
+
+  test "forks can not be taken twice" do
+    fork1 = Fork.create_fork
+    assert Fork.take_fork(fork1)
+    assert !Fork.take_fork(fork1)
   end
 
   test "forks can be returned" do

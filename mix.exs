@@ -20,6 +20,23 @@ defmodule ElixirDiningPhilosophers.Mixfile do
 end
 
 defmodule Mix.Tasks.Start do
+  @shortdoc "use mix start.deadlock | start.nolock | start.starving"
+  @moduledoc "use mix start.deadlock | start.nolock | start.starving"
+
+  def run(_) do
+    IO.puts "use mix start.deadlock | start.nolock | start.starving"
+  end
+
+  defmodule Starving do
+    use Mix.Task
+
+    @shortdoc "start up the starving scenario"
+
+    def run(_) do
+      Mix.Task.run("run", ["ElixirDiningPhilosophers.starving_scenario()"])
+    end
+  end
+
   defmodule Deadlock do
     use Mix.Task
 
@@ -30,7 +47,7 @@ defmodule Mix.Tasks.Start do
     end
   end
 
-  defmodule Nonlocking do
+  defmodule Nolock do
     use Mix.Task
 
     @shortdoc "start up the non locking scenario"
