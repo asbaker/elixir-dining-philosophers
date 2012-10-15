@@ -1,5 +1,8 @@
-# ElixirDiningPhilosophers
+ElixirDiningPhilosophers
+=======================
 
+Description From [Communicating Sequential Processes](http://usingcsp.com/) by Tony Hoare
+-------------
 "In ancient times, a wealthy philanthropist endowed a College to accommodate ﬁve eminent philosophers.
 Each philosopher had a room in which he could engage in his professional activity of thinking;
 there was also a common dining room, furnished with a circular table, surrounded by ﬁve chairs,
@@ -14,3 +17,22 @@ therefore had also to pick up the fork on his right. When we was ﬁnished he wo
 forks, get up from his chair, and continue thinking. Of course, a fork can be used by only on
 philosopher at a time. If the other philosopher wants it, he just has to wait until the fork is
 available again."
+
+Instructions
+----------------------
+- mix start.deadlock
+- mix start.starving
+- mix start.nolock
+
+A step by step representation of philosopher actions will be output, followed by a summary of the number of times 
+each philosopher has eaten.
+
+>**** Marx has eaten 46
+>
+>**** Kant has eaten 80
+>
+>**** Spinoza has eaten 62
+>
+>**** Russell has eaten 105
+>
+>**** Aristotle has eaten 38
