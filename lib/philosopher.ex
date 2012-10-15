@@ -81,7 +81,6 @@ defmodule Philosopher do
 
           Fork.return_fork(second_fork)
           Fork.return_fork(first_fork)
-          Philosopher.think(philosopher)
         else
           Fork.return_fork(first_fork)
           Philosopher.think(philosopher)
